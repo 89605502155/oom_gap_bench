@@ -16,8 +16,8 @@ import numpy as np
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from oom_gap_bench import METHODS, Scenario, simulate  # noqa: E402
-from oom_gap_bench.metrics import run_metrics  # noqa: E402
+from sydost_oom_bench import METHODS, Scenario, simulate  # noqa: E402
+from sydost_oom_bench.metrics import run_metrics  # noqa: E402
 
 SPEEDS = (50, 100, 200, 400)
 

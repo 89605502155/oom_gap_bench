@@ -1,4 +1,4 @@
-# oom-gap-bench
+# sydost-oom-bench
 
 Simulation bench for the article "A review of methods for accounting process failures caused by RAM shortage between monitoring points for mode reclassification and recalculation of an adaptive KVM management system" (A. O. Ferubko, O. D. Kazakov, Vestnik SPbGUPTD, Series 4).
 
@@ -27,9 +27,9 @@ Random seeds are fixed, so the results are reproduced exactly.
 
 | Path | Content |
 |---|---|
-| `src/oom_gap_bench/sim.py` | model of the guest OS, processes, OOM killer and monitoring loop |
-| `src/oom_gap_bench/methods.py` | controller and accounting variants M0–M5 |
-| `src/oom_gap_bench/metrics.py` | run metrics |
+| `src/sydost_oom_bench/sim.py` | model of the guest OS, processes, OOM killer and monitoring loop |
+| `src/sydost_oom_bench/methods.py` | controller and accounting variants M0–M5 |
+| `src/sydost_oom_bench/metrics.py` | run metrics |
 | `scripts/run_experiments.py` | series of runs → `results/runs.csv`, `summary.csv`, `summary.md` |
 | `scripts/make_figures.py` | `results/fig/fig1_timeline.*`, `fig2_summary.*` (PNG and TIFF, 600 dpi) |
 | `scripts/pypi_audit.py` | last release dates of PyPI packages → `results/pypi_audit.csv` |

@@ -1,6 +1,6 @@
 # Accounting variants (M0–M5)
 
-All variants are implemented by one controller, `oom_gap_bench.methods.Controller`. Each variant is a set of flags of `Method`.
+All variants are implemented by one controller, `sydost_oom_bench.methods.Controller`. Each variant is a set of flags of `Method`.
 
 - **M0** – original algorithm: instantaneous used memory, regression over five points, interval by the number of redistributions over five cycles.
 - **M1** – an increase of the `oom_kill` counter switches the system to the unstable mode for five cycles.

@@ -1,4 +1,4 @@
-# oom-gap-bench
+# sydost-oom-bench
 
 Имитационный стенд к статье «Обзор методов учёта отказов процессов из-за нехватки оперативной памяти между точками мониторинга для переклассификации режима и пересчёта адаптивной системы управления KVM» (А. О. Ферубко, О. Д. Казаков, Вестник СПбГУПТД. Серия 4).
 
@@ -27,9 +27,9 @@ python scripts/pypi_audit.py --date 2026-11-10   # аудит пакетов PyP
 
 | Путь | Содержание |
 |---|---|
-| `src/oom_gap_bench/sim.py` | модель гостевой ОС, процессов, OOM killer и цикла мониторинга |
-| `src/oom_gap_bench/methods.py` | контроллер и варианты учёта M0–M5 |
-| `src/oom_gap_bench/metrics.py` | показатели прогона |
+| `src/sydost_oom_bench/sim.py` | модель гостевой ОС, процессов, OOM killer и цикла мониторинга |
+| `src/sydost_oom_bench/methods.py` | контроллер и варианты учёта M0–M5 |
+| `src/sydost_oom_bench/metrics.py` | показатели прогона |
 | `scripts/run_experiments.py` | серия прогонов → `results/runs.csv`, `summary.csv`, `summary.md` |
 | `scripts/make_figures.py` | `results/fig/fig1_timeline.*`, `fig2_summary.*` (PNG и TIFF, 600 dpi) |
 | `scripts/pypi_audit.py` | дата последнего релиза пакетов PyPI → `results/pypi_audit.csv` |

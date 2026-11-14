@@ -1,8 +1,8 @@
 import numpy as np
 import pytest
 
-from oom_gap_bench import METHODS, Scenario, interval_rule, linear_forecast, simulate
-from oom_gap_bench.metrics import run_metrics
+from sydost_oom_bench import METHODS, Scenario, interval_rule, linear_forecast, simulate
+from sydost_oom_bench.metrics import run_metrics
 
 BY = {m.code: m for m in METHODS}
 

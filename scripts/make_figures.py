@@ -25,7 +25,7 @@ import numpy as np  # noqa: E402
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from oom_gap_bench import METHODS, Scenario, simulate  # noqa: E402
+from sydost_oom_bench import METHODS, Scenario, simulate  # noqa: E402
 
 MM = 1 / 25.4
 plt.rcParams.update(

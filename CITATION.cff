@@ -1,10 +1,10 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
-title: "oom-gap-bench"
+title: "sydost-oom-bench"
 version: 0.0.1
 date-released: 2026-11-13
 license: MIT
-repository-code: "https://github.com/89605502155/oom-gap-bench"
+repository-code: "https://github.com/89605502155/sydost-oom-bench"
 abstract: "Simulation bench for process failures between RAM monitoring points (OOM gap) and six accounting methods for mode reclassification and sample recalculation in an adaptive KVM memory controller."
 keywords:
   - KVM
