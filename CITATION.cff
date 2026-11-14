@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "oom-gap-bench"
+version: 0.0.1
+date-released: 2026-11-13
+license: MIT
+repository-code: "https://github.com/89605502155/oom-gap-bench"
+abstract: "Simulation bench for process failures between RAM monitoring points (OOM gap) and six accounting methods for mode reclassification and sample recalculation in an adaptive KVM memory controller."
+keywords:
+  - KVM
+  - memory
+  - OOM killer
+  - monitoring
+  - censored data
+authors:
+  - family-names: Ferubko
+    given-names: Andrey
+    email: ferubko1999@yandex.ru
+    affiliation: "Bryansk State University of Engineering and Technology"
+  - family-names: Kazakov
+    given-names: Oleg
+    email: kazakov@bgitu.ru
+    affiliation: "Bryansk State University of Engineering and Technology"
