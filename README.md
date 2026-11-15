@@ -60,4 +60,4 @@ Random seeds are fixed, so the results are reproduced exactly.
 
 ## Citation
 
-See `CITATION.cff`. License: MIT (file `LICENSE`). Version: 0.0.1 (`CHANGELOG.md`).
+See `CITATION.cff`. License: MIT (file `LICENSE`). Version: 0.0.3 (`CHANGELOG.md`).

@@ -1,6 +1,6 @@
 [project]
 name = "sydost-oom-bench"
-version = "0.0.1"
+version = "0.0.3"
 description = "Simulation bench for process failures between RAM monitoring points (OOM gap) and their accounting methods"
 readme = "README.md"
 license = { text = "MIT" }

@@ -60,4 +60,4 @@ python scripts/pypi_audit.py --date 2026-11-10   # аудит пакетов PyP
 
 ## Цитирование
 
-См. `CITATION.cff`. Лицензия: MIT (файл `LICENSE`). Версия: 0.0.1 (`CHANGELOG.md`).
+См. `CITATION.cff`. Лицензия: MIT (файл `LICENSE`). Версия: 0.0.3 (`CHANGELOG.md`).

@@ -1,7 +1,7 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 title: "sydost-oom-bench"
-version: 0.0.1
+version: 0.0.3
 date-released: 2026-11-13
 license: MIT
 repository-code: "https://github.com/89605502155/sydost-oom-bench"
