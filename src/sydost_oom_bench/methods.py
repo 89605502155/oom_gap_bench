@@ -19,10 +19,15 @@ M4  M3 + пересчёт запаса по квантили расхожден�
 M5  M2 + агент событий: внеплановая точка по порогу свободной ОП и скорости
     роста (аналог порогового уведомления PSI) с выделением запаса по оценке
     скорости роста; ограничение интервала.
+M6  M2 с забыванием в потоковом режиме: регрессия взвешивается экспоненциально
+    по давности наблюдения (TAU_W), а нижняя граница потребности убывает
+    экспоненциально с постоянной TAU_F вместо удержания на FLOOR_HOLD секунд.
+    Постоянные заданы заранее и не подбирались.
 """
 
 from __future__ import annotations
 
+import math
 from collections import deque
 from dataclasses import dataclass
 
@@ -35,6 +40,8 @@ THRESH = 10.0  # порог перераспределения, МиБ
 DT_MIN, DT_MAX = 1.0, 10.0
 WINDOW = 5  # наблюдений в регрессии и циклов в правиле интервала
 FLOOR_HOLD = 60.0  # время удержания нижней границы потребности, с
+TAU_W = 20.0  # постоянная времени весов регрессии в M6, с
+TAU_F = 30.0  # постоянная времени убывания нижней границы в M6, с
 
 
 def interval_rule(m: int) -> float:
@@ -42,13 +49,18 @@ def interval_rule(m: int) -> float:
     return DT_MAX - (DT_MAX - DT_MIN) * min(m, WINDOW) / WINDOW
 
 
-def linear_forecast(ts, xs, t_next: float) -> tuple[float, float]:
-    """Прогноз МНК по наблюдениям; возвращает (прогноз, наклон)."""
+def linear_forecast(ts, xs, t_next: float, weights=None) -> tuple[float, float]:
+    """Прогноз МНК по наблюдениям; возвращает (прогноз, наклон).
+
+    weights — необязательные веса наблюдений (взвешенный МНК, вес = квадрат
+    множителя невязки, поэтому в polyfit передаётся корень из веса).
+    """
     ts = np.asarray(ts, float)
     xs = np.asarray(xs, float)
     if len(ts) < 2 or np.ptp(ts) == 0:
         return float(xs[-1]), 0.0
-    slope, icpt = np.polyfit(ts - ts[-1], xs, 1)
+    w = None if weights is None else np.sqrt(np.asarray(weights, float))
+    slope, icpt = np.polyfit(ts - ts[-1], xs, 1, w=w)
     return float(icpt + slope * (t_next - ts[-1])), float(slope)
 
 
@@ -62,6 +74,7 @@ class Method:
     reserve_q: float | None = None  # квантиль для пересчёта запаса
     bound_interval: bool = False  # ограничение Δt временем исчерпания запаса
     event_driven: bool = False  # внеплановые точки по событиям агента
+    forget: bool = False  # M6: взвешенная регрессия и убывающая нижняя граница
     low_free: float = 256.0  # порог свободной ОП для агента, МиБ
     low_rate: float = 20.0  # порог скорости роста для агента, МиБ/с
 
@@ -84,6 +97,7 @@ class Controller:
         self.dt = DT_MAX
         self.floor = 0.0  # нижняя граница потребности
         self.floor_until = -1.0
+        self.floor_t = -1e9  # момент последнего цензурирования (M6)
         self._prev_used = None
         self._t_last_event = -1e9
 
@@ -103,6 +117,12 @@ class Controller:
             self._t_last_event = t
             return ("low_mem", rate)
         return None
+
+    def floor_at(self, t: float) -> float:
+        """Нижняя граница потребности в момент t (M6: экспоненциальное убывание)."""
+        if self.floor <= 0.0:
+            return 0.0
+        return self.floor * math.exp(-(t - self.floor_t) / TAU_F)
 
     # --- точка мониторинга ---------------------------------------------------
     def step(self, obs: dict) -> tuple[float, float, int]:
@@ -125,14 +145,22 @@ class Controller:
             self.gaps.append(max(0.0, peak - used))
         self.ts.append(t)
         self.xs.append(x)
-        if censored:
+        if censored and m.forget:
+            self.floor = max(self.floor_at(t), x)
+            self.floor_t = t
+        elif censored:
             self.floor = max(self.floor if t < self.floor_until else 0.0, x)
             self.floor_until = t + FLOOR_HOLD
 
         # 2. Прогноз и новый объём
-        fc, slope = linear_forecast(self.ts, self.xs, t + self.dt)
-        if t < self.floor_until:
-            fc = max(fc, self.floor)
+        if m.forget:
+            weights = [math.exp(-(t - tk) / TAU_W) for tk in self.ts]
+            fc, slope = linear_forecast(self.ts, self.xs, t + self.dt, weights)
+            fc = max(fc, self.floor_at(t))
+        else:
+            fc, slope = linear_forecast(self.ts, self.xs, t + self.dt)
+            if t < self.floor_until:
+                fc = max(fc, self.floor)
         # Правило [1]: свободная ОП пула делится поровну между гостем и хостом,
         # но не меньше минимального запаса R.
         reserve = max(R, (self.sc.a_max - fc) / 2)
@@ -185,4 +213,5 @@ METHODS = [
         bound_interval=True,
         event_driven=True,
     ),
+    Method("M6", "M2 с забыванием: взвешенная регрессия и убывающая граница", counter=True, impute=True, forget=True),
 ]
